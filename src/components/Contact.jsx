@@ -45,11 +45,12 @@ async function sendMessage(values) {
     return;
   }
 
-  const res = await fetch('/api/contact', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(values),
-  });
+  const res = await fetch('https://mimii-backend.vercel.app/api/contact', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(values),
+});
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(
