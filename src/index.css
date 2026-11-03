@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   THEMES — each theme sets 3 accent colors (a, b, c) and the page
+   background (void) as space-separated RGB triplets.
+   Tailwind's neon.pink / neon.purple / neon.violet map to a / b / c.
+   ------------------------------------------------------------------ */
+:root,
+[data-theme='ocean'] {
+  --c-a: 6 182 212; /* cyan */
+  --c-b: 59 130 246; /* blue */
+  --c-c: 99 102 241; /* indigo */
+  --c-void: 3 7 18;
+}
+[data-theme='emerald'] {
+  --c-a: 16 185 129;
+  --c-b: 45 212 191;
+  --c-c: 22 163 74;
+  --c-void: 2 12 10;
+  --media-filter: hue-rotate(-38deg) saturate(1.15);
+}
+[data-theme='sunset'] {
+  --c-a: 249 115 22;
+  --c-b: 245 158 11;
+  --c-c: 239 68 68;
+  --c-void: 12 6 4;
+  /* warms the cyan/blue photo into orange so it matches */
+  --media-filter: sepia(0.8) saturate(1.8) hue-rotate(-14deg) brightness(1.05);
+}
+[data-theme='orchid'] {
+  --c-a: 255 46 159;
+  --c-b: 168 85 247;
+  --c-c: 124 58 237;
+  --c-void: 7 3 15;
+  --media-filter: hue-rotate(110deg) saturate(1.2);
+}
+
+/* Hero photo/video is color-graded per theme (Ocean = original colors, no filter).
+   Tweak the --media-filter value in each theme above to taste. */
+.hero-media {
+  filter: var(--media-filter, none);
+  transition: filter 0.6s ease;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-void font-sans text-slate-300 antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: rgb(var(--c-a) / 0.4);
+    color: #fff;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--c-void));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(rgb(var(--c-a)), rgb(var(--c-c)));
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .text-gradient {
+    background-image: linear-gradient(
+      90deg,
+      rgb(var(--c-a)),
+      rgb(var(--c-b)),
+      rgb(var(--c-a))
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-x 6s linear infinite;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 font-semibold text-white shadow-neon transition-all duration-300 hover:scale-105 hover:shadow-purple;
+    background-image: linear-gradient(90deg, rgb(var(--c-a)), rgb(var(--c-c)));
+  }
+  .btn-ghost {
+    @apply glass inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:border-neon-pink/60 hover:bg-white/10;
+  }
+  .section {
+    @apply relative mx-auto max-w-6xl px-5 py-24 sm:px-8;
+  }
+  .badge {
+    @apply rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300 transition-colors duration-300 hover:border-neon-pink/50 hover:text-white;
+  }
+  .input-field {
+    @apply w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white/10;
+  }
+
+  /* Card with a mouse-following glow (see SpotlightCard.jsx) */
+  .spotlight {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: border-color 0.3s ease;
+  }
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--c-a) / 0.14),
+      transparent 45%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .spotlight:hover {
+    border-color: rgb(var(--c-a) / 0.4);
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Subtle engineering-grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+}
+.bg-grid-sm {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@keyframes gradient-x {
+  to {
+    background-position: 200% center;
+  }
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
